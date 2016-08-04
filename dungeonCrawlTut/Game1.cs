@@ -12,6 +12,9 @@ namespace dungeonCrawlTut
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Texture2D personImage;
+        Vector2 pIPosition;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -26,7 +29,8 @@ namespace dungeonCrawlTut
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            //Set the start position
+            pIPosition = new Vector2(0.0f, 0.0f); // can be pIPosition = Vector.Zero
 
             base.Initialize();
         }
@@ -40,7 +44,7 @@ namespace dungeonCrawlTut
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            personImage = Content.Load<Texture2D>("tesst"); //load Image
         }
 
         /// <summary>
@@ -62,7 +66,30 @@ namespace dungeonCrawlTut
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            // gather input and update position
+
+            float time = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float speed = 250.0f;
+            float moveAmount = speed * time;
+
+            KeyboardState state = Keyboard.GetState();
+            if (state.IsKeyDown(Keys.Down)||state.IsKeyDown(Keys.S))
+            {
+                pIPosition.Y += moveAmount;
+            }
+            if (state.IsKeyDown(Keys.Up)||state.IsKeyDown(Keys.W))
+            {
+                pIPosition.Y -= moveAmount;
+            }
+            if (state.IsKeyDown(Keys.Left)|| state.IsKeyDown(Keys.A))
+            {
+                pIPosition.X -= moveAmount;
+            }
+            if (state.IsKeyDown(Keys.Right)|| state.IsKeyDown(Keys.D))
+            {
+                pIPosition.X += moveAmount;
+            }
+
 
             base.Update(gameTime);
         }
@@ -73,9 +100,14 @@ namespace dungeonCrawlTut
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Indigo);
 
-            // TODO: Add your drawing code here
+            // Draw sprite
+            spriteBatch.Begin();
+
+            spriteBatch.Draw(personImage, pIPosition, Color.White);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
